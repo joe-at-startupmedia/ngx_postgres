@@ -114,6 +114,7 @@ typedef struct {
     ngx_str_t                           dbname;
     ngx_str_t                           user;
     ngx_str_t                           password;
+    ngx_str_t                           sslmode;
 } ngx_postgres_upstream_server_t;
 
 typedef struct {
@@ -125,6 +126,7 @@ typedef struct {
     ngx_str_t                           dbname;
     ngx_str_t                           user;
     ngx_str_t                           password;
+    ngx_str_t                           sslmode;
 } ngx_postgres_upstream_peer_t;
 
 typedef struct {

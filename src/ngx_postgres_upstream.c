@@ -94,6 +94,7 @@ ngx_postgres_upstream_init(ngx_conf_t *cf, ngx_http_upstream_srv_conf_t *uscf)
             peers->peer[n].dbname = server[i].dbname;
             peers->peer[n].user = server[i].user;
             peers->peer[n].password = server[i].password;
+            peers->peer[n].sslmode = server[i].sslmode;
 
             peers->peer[n].host.data = ngx_pnalloc(cf->pool,
                                                    NGX_SOCKADDR_STRLEN);
@@ -335,7 +336,7 @@ ngx_postgres_upstream_get_peer(ngx_peer_connection_t *pc, void *data)
         + sizeof("dbname=") + peer->dbname.len
         + sizeof("user=") + peer->user.len
         + sizeof("password=") + peer->password.len
-        + sizeof("sslmode=disable");
+        + sizeof("sslmode=") + peer->sslmode.len;
 
     connstring = ngx_pnalloc(pgdt->request->pool, len);
     if (connstring == NULL) {
@@ -350,9 +351,9 @@ ngx_postgres_upstream_get_peer(ngx_peer_connection_t *pc, void *data)
     /* TODO add unix sockets */
     last = ngx_snprintf(connstring, len - 1,
                         "hostaddr=%V port=%d dbname=%V user=%V password=%V"
-                        " sslmode=disable",
+                        " sslmode=%V",
                         &peer->host, peer->port, &peer->dbname, &peer->user,
-                        &peer->password);
+                        &peer->password, &peer->sslmode);
     *last = '\0';
 
     dd("PostgreSQL connection string: %s", connstring);
