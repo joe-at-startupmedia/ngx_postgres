@@ -471,6 +471,14 @@ ngx_postgres_conf_server(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
             continue;
         }
 
+        if (ngx_strncmp(value[i].data, "sslmode=", sizeof("sslmode=") - 1)
+                == 0)
+        {
+            pgs->sslmode.len = value[i].len - (sizeof("sslmode=") - 1);
+            pgs->sslmode.data = &value[i].data[sizeof("sslmode=") - 1];
+            continue;
+        }
+
         ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                            "postgres: invalid parameter \"%V\" in"
                            " \"postgres_server\"", &value[i]);
